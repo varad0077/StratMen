@@ -3,16 +3,17 @@
 ================================================================================
 
 ────────────────────────────────────────────────────────────────────────────────
-Date/Time   : 2026-08-10 16:38 IST
-Feature     : Added Custom .agents Configuration & Anti-Slop Skill to StratMen
+Date/Time   : 2026-08-10 16:43 IST
+Feature     : Created .gitignore & Ignored .agents Directory
 ────────────────────────────────────────────────────────────────────────────────
 
 Summary:
-  Configured dedicated project rules and custom AI agent skills strictly inside
-  the StratMen project directory (`StratMen_Foundation_Prompt_Package/.agents/`).
+  Created `.gitignore` in the StratMen project directory to exclude node_modules,
+  build outputs, sensitive environment variables, and local AI agent configurations (`.agents/`).
+  Untracked `.agents/` from remote git tracking.
 
-Created Files:
-  - `.agents/AGENTS.md` (StratMen Project Guidelines & Anti-Slop Rules)
-  - `.agents/skills/prevent_ai_slop/SKILL.md` (Anti-Slop Quality Enforcement Skill)
+Created / Modified Files:
+  - `.gitignore` (Created with .agents/ exclusion rules)
+  - `PROJECT_CHANGE_LOG.txt` (Updated)
 
 ================================================================================
