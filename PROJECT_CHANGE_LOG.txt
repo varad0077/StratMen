@@ -1,0 +1,30 @@
+================================================================================
+  STRATMEN FOUNDATION — PROJECT CHANGE LOG
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+Date/Time   : 2026-08-10 16:08 IST
+Feature     : Streamlined UX Architecture & Integrated Admin Portal
+────────────────────────────────────────────────────────────────────────────────
+
+Summary:
+  Updated project architecture and documentation specifications based on exact design requirements:
+  1. Removed standalone `/join` page: Membership applications ("Apply to Join") are now
+     embedded directly inside the StratChat Entry Gate (`/stratchat`), placed conveniently
+     right below the Log In form.
+  2. Integrated Admin Portal inside StratChat: The Admin Portal (`/stratchat/admin`) is
+     accessed directly inside StratChat navigation for Admin users (Join Requests, Allowlist,
+     User Suspension, Content Management, Audit Logs).
+  3. Public Website Streamlined: Main site header focused purely on marketing (`Home`, `Activities`,
+     `Journey`, `About Us`, and `StratChat` CTA button).
+
+Updated Documentation & Structure Files:
+  - `docs/01_PRD.md` — Updated navigation & integrated portal specifications
+  - `docs/03_APP_FLOW.md` — Updated application flow diagrams & entry gate wireframe
+  - `docs/04_DESIGN_LAYOUT.md` — Updated navbar & StratChat entry gate layout diagrams
+  - `frontend_structure/COMPONENT_HIERARCHY.md` — Updated component tree & embedded JoinUs form
+  - `frontend_structure/ROUTING_MAP.md` — Simplified route map with `/stratchat/admin`
+  - `prompts/MASTER_PROMPT.md` — Master build prompt updated for Claude
+  - `prompts/PROMPT_FRONTEND.md` — Frontend prompt updated for unified gate
+
+================================================================================
