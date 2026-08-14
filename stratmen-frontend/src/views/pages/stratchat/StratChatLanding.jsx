@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -29,6 +29,14 @@ const joinSchema = z.object({
 export const StratChatLanding = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { isAuthenticated, isAllowlisted } = useSelector((state) => state.auth);
+
+  // Auto-redirect already logged-in & allowlisted members directly to feed
+  useEffect(() => {
+    if (isAuthenticated && isAllowlisted) {
+      navigate('/stratchat/feed', { replace: true });
+    }
+  }, [isAuthenticated, isAllowlisted, navigate]);
 
   // Login form state
   const [loginEmail, setLoginEmail] = useState('');

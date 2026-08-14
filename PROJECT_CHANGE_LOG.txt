@@ -3,6 +3,27 @@
 ================================================================================
 
 ────────────────────────────────────────────────────────────────────────────────
+Date/Time   : 2026-08-14 17:08 IST
+Feature     : Session & Allowlist LocalStorage Persistence across Page Refreshes
+────────────────────────────────────────────────────────────────────────────────
+
+Summary:
+  Fixed page refresh (`F5`) causing verified users to briefly see `/access-pending`:
+  - Updated `authSlice.js` to persist and load `isAllowlisted` and `isAdmin` status directly
+    from `localStorage`.
+  - On browser refresh or tab reopen, verified users immediately remain logged in seamlessly
+    for the entire standard Supabase session window without any redirection.
+  - Removed "Re-check Access Status" button from `AccessPending.jsx` as requested.
+
+Created / Modified Files:
+  - `stratmen-frontend/src/store/authSlice.js` (Updated)
+  - `stratmen-frontend/src/views/pages/authentication/AccessPending.jsx` (Updated)
+  - `PROJECT_CHANGE_LOG.txt` (Updated)
+
+================================================================================
+
+
+────────────────────────────────────────────────────────────────────────────────
 Date/Time   : 2026-08-14 15:52 IST
 Feature     : Synchronized OAuth Callback & Redux Allowlist Navigation Fix
 ────────────────────────────────────────────────────────────────────────────────

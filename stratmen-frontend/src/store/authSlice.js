@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-// Helper to load cached allowlist status from localStorage for instant reload persistence
+// Helper to load cached allowlist status from localStorage
 const loadCachedAllowlist = () => {
   try {
     const cached = localStorage.getItem('stratmen_allowlist_status');
@@ -17,13 +17,41 @@ const loadCachedAllowlist = () => {
   return { isAllowlisted: false, isAdmin: false };
 };
 
+// Helper to load cached Supabase session token from localStorage
+const loadCachedSession = () => {
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && (key.includes('-auth-token') || key.includes('supabase.auth.token'))) {
+        const item = localStorage.getItem(key);
+        if (item) {
+          const parsed = JSON.parse(item);
+          const sess = parsed?.currentSession || parsed;
+          const user = sess?.user || parsed?.user || null;
+          if (user) {
+            return {
+              session: sess,
+              user: user,
+              isAuthenticated: true,
+            };
+          }
+        }
+      }
+    }
+  } catch (e) {
+    console.error('Failed to load cached session:', e);
+  }
+  return { session: null, user: null, isAuthenticated: false };
+};
+
 const cachedStatus = loadCachedAllowlist();
+const cachedSession = loadCachedSession();
 
 const initialState = {
-  user: null,
+  user: cachedSession.user,
   profile: null,
-  session: null,
-  isAuthenticated: false,
+  session: cachedSession.session,
+  isAuthenticated: cachedSession.isAuthenticated,
   isAllowlisted: cachedStatus.isAllowlisted,
   isAdmin: cachedStatus.isAdmin,
   loading: true,
