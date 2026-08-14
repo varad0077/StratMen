@@ -1,0 +1,343 @@
+# StratMen Foundation — Complete Full-Stack Build
+
+Build the complete StratMen Foundation website + StratChat portal as a React 19 + Vite 8 SPA backed by Supabase (PostgreSQL + Auth + Realtime) and Cloudinary.
+
+## User Review Required
+
+> [!IMPORTANT]
+> **This is a massive build** — approximately **70+ files** spanning database migrations, Supabase config, services, hooks, Redux store, layouts, views, and components. The frontend alone will be ~50 files.
+
+> [!IMPORTANT]
+> **Database Setup is Manual**: You will need to run the consolidated SQL migration script in the **Supabase SQL Editor** yourself. I will generate a single combined `.sql` file for convenience, but Supabase database cannot be provisioned from code.
+
+> [!WARNING]
+> **Supabase Credentials Required**: Your `.env` file already contains valid keys (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_CLOUDINARY_CLOUD_NAME`, `VITE_CLOUDINARY_UPLOAD_PRESET`). I will use these directly.
+
+> [!IMPORTANT]
+> **Google OAuth**: The Google OAuth callback (`/auth/callback`) requires a configured Google OAuth provider in your Supabase Dashboard → Authentication → Providers → Google. Have you set this up?
+
+## Open Questions
+
+> [!IMPORTANT]
+> 1. **Cloudinary Upload Preset**: Is `stratmen_posts` already configured as an **unsigned** upload preset in your Cloudinary dashboard? (Required for client-side uploads.)
+> 2. **TailwindCSS Version**: The spec says TailwindCSS 4. TailwindCSS v4 uses a new CSS-first configuration model (no `tailwind.config.js`). Shall I proceed with TailwindCSS 4, or would you prefer TailwindCSS 3 which has broader shadcn/ui compatibility?
+> 3. **Admin Portal**: The spec lists an **integrated Admin Portal inside StratChat** at `/stratchat/admin`. Should admin see separate tabs (Join Requests, Allowlist, Users, Content, Audit Logs) as a tabbed interface, or as separate sub-routes?
+
+---
+
+## Proposed Changes
+
+The project will be created as `stratmen-frontend/` inside your workspace root.
+
+---
+
+### Phase 1: Project Scaffolding & Configuration
+
+#### [NEW] `stratmen-frontend/` — Vite + React project
+- Initialize via `npx -y create-vite@latest ./ --template react`
+- Install all dependencies:
+  - `@supabase/supabase-js`, `react-router-dom`, `@reduxjs/toolkit`, `react-redux`
+  - `framer-motion`, `react-hook-form`, `@hookform/resolvers`, `zod`
+  - `lucide-react`, `@tabler/icons-react`, `sonner`
+  - `tailwindcss`, `@tailwindcss/vite` (v4) or `tailwindcss` + `autoprefixer` (v3)
+  - `clsx`, `tailwind-merge`, `class-variance-authority` (shadcn/ui deps)
+
+#### [NEW] [vite.config.js](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/vite.config.js)
+- Path alias: `@` → `./src`
+- React plugin, dev server port 3000
+
+#### [NEW] [.env](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/.env)
+- Copy existing Supabase + Cloudinary keys from workspace root `.env`
+
+#### [NEW] [index.html](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/index.html)
+- Inter Google Font preconnect + link
+- SEO meta tags, Open Graph, favicon
+
+#### [NEW] [src/index.css](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/index.css)
+- TailwindCSS imports
+- CSS custom properties for design tokens (`--bg-dark: #0F0F0F`, `--surface: #1A1A1A`, `--accent: #A8E63D`)
+
+---
+
+### Phase 2: Config & Lib Utilities
+
+#### [NEW] [src/config/supabaseClient.js](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/config/supabaseClient.js)
+- `createClient(VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY)`
+
+#### [NEW] [src/config/cloudinary.js](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/config/cloudinary.js)
+- `validateAndUploadImage(file)` — file type/size validation, unsigned upload to Cloudinary
+- Client-side WebP compression via canvas before upload
+
+#### [NEW] [src/lib/utils.js](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/lib/utils.js)
+- `cn()` helper (clsx + tailwind-merge)
+- `formatDate()`, `formatRelativeTime()`, `truncateText()` utilities
+
+---
+
+### Phase 3: Service Layer (Supabase Query Wrappers)
+
+All services wrap `supabase` client calls with proper error handling and toast feedback.
+
+#### [NEW] [src/services/authService.js](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/services/authService.js)
+- `loginWithEmail(email, password)`, `signUpWithEmail(email, password, fullName)`
+- `loginWithGoogle()`, `handleOAuthCallback()`
+- `logout()`, `getSession()`, `getCurrentUser()`
+
+#### [NEW] [src/services/allowlistService.js](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/services/allowlistService.js)
+- `checkAllowlist(email)`, `getAllowlist()`, `addMember(data)`, `updateMember(email, data)`, `revokeMember(email)`
+
+#### [NEW] [src/services/postService.js](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/services/postService.js)
+- `getFeedPosts(filter)`, `createPost(content, imageUrl)`, `deletePost(id)`, `updatePost(id, data)`, `togglePin(id)`
+
+#### [NEW] [src/services/commentService.js](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/services/commentService.js)
+- `getComments(postId)`, `addComment(postId, content)`, `deleteComment(id)`
+
+#### [NEW] [src/services/likeService.js](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/services/likeService.js)
+- `toggleLike(postId)`
+
+#### [NEW] [src/services/bookmarkService.js](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/services/bookmarkService.js)
+- `toggleBookmark(postId)`
+
+#### [NEW] [src/services/chatService.js](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/services/chatService.js)
+- `getMessages(limit, beforeId)`, `sendMessage(content, imageUrl)`, `deleteMessage(id)`
+
+#### [NEW] [src/services/joinRequestService.js](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/services/joinRequestService.js)
+- `submitApplication(data)`, `getRequests(status)`, `updateRequestStatus(id, status, adminNotes)`
+
+#### [NEW] [src/services/adminService.js](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/services/adminService.js)
+- `getDashboardStats()`, `getAuditLogs(page)`, `logAction(action, targetTable, targetId, details)`
+- `getUsers(search, status)`, `suspendUser(id)`, `unsuspendUser(id)`, `deleteUser(id)`
+
+#### [NEW] [src/services/contentService.js](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/services/contentService.js)
+- CRUD for: activities, journey_milestones, team_members, footprints, homepage_content
+
+---
+
+### Phase 4: Redux Store & Custom Hooks
+
+#### [NEW] [src/store/index.js](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/store/index.js)
+- `configureStore({ reducer: { auth: authReducer, ui: uiReducer } })`
+
+#### [NEW] [src/store/authSlice.js](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/store/authSlice.js)
+- State: `{ user, session, isAuthenticated, isAllowlisted, isAdmin, loading }`
+- Reducers: `setUser`, `setSession`, `setAllowlistStatus`, `clearAuth`
+
+#### [NEW] [src/store/uiSlice.js](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/store/uiSlice.js)
+- State: `{ sidebarOpen, theme }`
+
+#### [NEW] [src/hooks/useAuth.js](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/hooks/useAuth.js)
+- `supabase.auth.onAuthStateChange` listener
+- Auto-check allowlist on session change, dispatch to Redux
+
+#### [NEW] [src/hooks/usePosts.js](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/hooks/usePosts.js)
+- Fetch posts + Supabase Realtime subscription (INSERT/DELETE on `posts` table)
+- As specified in [08_STRATCHAT_REALTIME.md](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/docs/08_STRATCHAT_REALTIME.md)
+
+#### [NEW] [src/hooks/useChat.js](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/hooks/useChat.js)
+- Fetch messages + Supabase Realtime subscription (INSERT/DELETE on `chat_messages` table)
+- Auto-scroll to bottom on new messages
+
+---
+
+### Phase 5: shadcn/ui Base Components
+
+#### [NEW] `src/components/ui/` directory
+- `button.jsx`, `input.jsx`, `textarea.jsx`, `card.jsx`, `dialog.jsx`, `dropdown-menu.jsx`
+- `tabs.jsx`, `badge.jsx`, `avatar.jsx`, `separator.jsx`, `tooltip.jsx`, `label.jsx`
+- `sonner.jsx` (Toaster wrapper)
+
+All components built manually (no shadcn CLI dependency) using `class-variance-authority` + `cn()`.
+
+---
+
+### Phase 6: Layout Components
+
+#### [NEW] [src/layout/PublicLayout/index.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/layout/PublicLayout/index.jsx)
+- Wrapper: `<Navbar /> + <Outlet /> + <Footer />`
+
+#### [NEW] [src/layout/PublicLayout/Navbar.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/layout/PublicLayout/Navbar.jsx)
+- Fixed/sticky, backdrop blur, dark theme
+- Links: Home, Activities, Journey, About Us
+- Lime-green `StratChat` CTA pill button → `/stratchat`
+- Mobile hamburger menu
+
+#### [NEW] [src/layout/PublicLayout/Footer.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/layout/PublicLayout/Footer.jsx)
+- Organization info, links, copyright
+
+#### [NEW] [src/layout/StratChatLayout/index.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/layout/StratChatLayout/index.jsx)
+- 3-column layout: `<LeftSidebar /> + <Outlet /> + <RightSidebar />`
+- `<Header />` on top
+
+#### [NEW] [src/layout/StratChatLayout/Header.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/layout/StratChatLayout/Header.jsx)
+- StratChat logo, user avatar, logout button
+
+#### [NEW] [src/layout/StratChatLayout/LeftSidebar.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/layout/StratChatLayout/LeftSidebar.jsx)
+- Profile card (avatar, name, role badge)
+- Nav links: Feed, Group Chat, Profile
+- Admin section: Admin Portal link (conditional on `isAdmin`)
+
+#### [NEW] [src/layout/StratChatLayout/RightSidebar.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/layout/StratChatLayout/RightSidebar.jsx)
+- Verified members list, community stats
+
+---
+
+### Phase 7: Route Guards & Router
+
+#### [NEW] [src/routes/index.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/routes/index.jsx)
+- `createBrowserRouter` with all routes
+
+#### [NEW] [src/routes/ProtectedMemberRoute.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/routes/ProtectedMemberRoute.jsx)
+- Auth + Allowlist guard as specified in [ROUTING_MAP.md](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/frontend_structure/ROUTING_MAP.md)
+
+#### [NEW] [src/routes/ProtectedAdminRoute.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/routes/ProtectedAdminRoute.jsx)
+- Auth + Allowlist + `is_admin` guard
+
+---
+
+### Phase 8: Public Marketing Pages
+
+#### [NEW] [src/views/landing/Home.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/views/landing/Home.jsx)
+- `<HeroSection />`: Animated headline, subtitle, CTA buttons with Framer Motion
+- `<MissionVision />`: Glassmorphism cards for Mission & Vision
+- `<FootprintStats />`: Animated counters (months, members, meetings, visits) from Supabase `footprints` table
+- `<ActivitiesPreview />`: Quick activity highlights linking to `/activities`
+
+#### [NEW] [src/views/landing/components/HeroSection.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/views/landing/components/HeroSection.jsx)
+#### [NEW] [src/views/landing/components/MissionVision.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/views/landing/components/MissionVision.jsx)
+#### [NEW] [src/views/landing/components/FootprintStats.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/views/landing/components/FootprintStats.jsx)
+
+#### [NEW] [src/views/pages/Activities/Activities.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/views/pages/Activities/Activities.jsx)
+- Card grid from `activities` table: Sunday Meetings, Industry Visits, Talks & Meets
+- Framer Motion scroll reveal animations
+
+#### [NEW] [src/views/pages/Journey/Journey.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/views/pages/Journey/Journey.jsx)
+- Vertical animated timeline from `journey_milestones` table
+- Each milestone fades in on scroll with Framer Motion `useInView`
+
+#### [NEW] [src/views/pages/AboutUs/AboutUs.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/views/pages/AboutUs/AboutUs.jsx)
+- Background story section
+- Team member cards from `team_members` table (name, role, photo, LinkedIn)
+
+---
+
+### Phase 9: StratChat Gate & Auth
+
+#### [NEW] [src/views/pages/stratchat/StratChatLanding.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/views/pages/stratchat/StratChatLanding.jsx)
+- Combined Entry Gate as specified in [04_DESIGN_LAYOUT.md](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/docs/04_DESIGN_LAYOUT.md)
+- **Top**: Login form (Google OAuth button + Email/Password fields)
+- **Below**: Embedded "Apply to Join" form (Full Name, Email, Phone, LinkedIn, Reason) validated with Zod
+- Glassmorphism cards on gradient background
+
+#### [NEW] [src/views/pages/authentication/GoogleAuthCallback.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/views/pages/authentication/GoogleAuthCallback.jsx)
+- Handle Supabase OAuth callback, extract session, check allowlist, redirect
+
+#### [NEW] [src/views/pages/authentication/AccessPending.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/views/pages/authentication/AccessPending.jsx)
+- "Your application is pending admin approval" screen
+
+---
+
+### Phase 10: StratChat Portal Pages
+
+#### [NEW] [src/views/pages/stratchat/Feed.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/views/pages/stratchat/Feed.jsx)
+- `<PostCreator />` + `<FilterBar />` + `<PostCard />` list
+- Real-time updates via `usePosts()` hook
+
+#### [NEW] [src/components/feed/PostCreator.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/components/feed/PostCreator.jsx)
+- Text input + Cloudinary image upload with preview
+- Character count, loading state, WebP compression
+
+#### [NEW] [src/components/feed/FilterBar.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/components/feed/FilterBar.jsx)
+- All Posts / Saved / My Posts toggle
+
+#### [NEW] [src/components/feed/PostCard.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/components/feed/PostCard.jsx)
+- Author avatar + name + role badge
+- Content text + image (click to lightbox)
+- Action buttons: Like (heart), Comment (expand), Bookmark, Copy Link, Delete (own/admin)
+
+#### [NEW] [src/components/feed/CommentSection.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/components/feed/CommentSection.jsx)
+- Expandable comment list per post + add comment input
+
+#### [NEW] [src/views/pages/stratchat/Profile.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/views/pages/stratchat/Profile.jsx)
+- User info card (avatar, name, role, member since)
+- Stats: Total Posts, Total Likes Received, Total Bookmarks
+- "My Posts" timeline
+
+#### [NEW] [src/views/pages/stratchat/GroupChat.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/views/pages/stratchat/GroupChat.jsx)
+- Chat window: messages (own on right, others on left)
+- Real-time via `useChat()` hook
+- Auto-scroll, image attachment, send button
+
+#### [NEW] [src/components/chat/ChatMessage.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/components/chat/ChatMessage.jsx)
+- Individual message bubble with avatar, name, timestamp
+
+---
+
+### Phase 11: Integrated Admin Portal
+
+#### [NEW] [src/views/pages/stratchat/AdminPortal.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/views/pages/stratchat/AdminPortal.jsx)
+- Tabbed interface with 5 tabs:
+
+1. **Join Requests Tab**: Table of pending/approved/rejected requests → Approve/Reject buttons
+2. **Allowlist Tab**: View members, add new, revoke access, toggle admin
+3. **User Management Tab**: Search users, suspend/unsuspend, delete
+4. **Content Editor Tab**: Edit activities, journey milestones, team members, footprints, homepage content
+5. **Audit Logs Tab**: Paginated table of admin action logs
+
+---
+
+### Phase 12: Shared Components
+
+#### [NEW] [src/components/SplashScreen.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/components/SplashScreen.jsx)
+- Seed → Tree animation on first page load (2s duration)
+
+#### [NEW] [src/components/Loader.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/components/Loader.jsx)
+- Pulsing lime-green loading spinner
+
+#### [NEW] [src/components/ConfirmationDialog.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/components/ConfirmationDialog.jsx)
+- Reusable confirm action modal (delete post, revoke member, etc.)
+
+#### [NEW] [src/components/ImageLightbox.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/components/ImageLightbox.jsx)
+- Full-screen image preview modal with backdrop click to close
+
+#### [NEW] [src/components/NoRecords.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/components/NoRecords.jsx)
+- Empty state with illustration
+
+---
+
+### Phase 13: App Entry Points
+
+#### [NEW] [src/main.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/main.jsx)
+- `ReactDOM.createRoot` → `<App />`
+
+#### [NEW] [src/App.jsx](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/stratmen-frontend/src/App.jsx)
+- `<Provider store={store}>` → `<RouterProvider router={router}>` → `<Toaster />` → `<SplashScreen />`
+- Initialize `useAuth()` hook at top level
+
+---
+
+### Phase 14: Database Migration (Manual)
+
+#### [NEW] [database/combined_migration.sql](file:///c:/Users/varad/OneDrive/Desktop/StratMen_Foundation_Prompt_Package/database/combined_migration.sql)
+- Single combined SQL file merging all 19 migrations + seed data
+- Ready to paste into Supabase SQL Editor
+
+---
+
+## Verification Plan
+
+### Automated Tests
+```bash
+cd stratmen-frontend
+npm run build   # Verify zero build errors / JSX syntax issues
+```
+
+### Manual Verification
+- Run `npm run dev` and verify:
+  - All 4 public pages render with animations
+  - StratChat landing gate shows login + join form
+  - Google OAuth redirects properly
+  - Protected routes redirect unauthenticated users
+  - Feed shows posts with real-time updates
+  - Group chat sends/receives messages in real-time
+  - Admin portal tabs work for admin users
+- Responsive testing at mobile (< 768px), tablet, and desktop breakpoints
