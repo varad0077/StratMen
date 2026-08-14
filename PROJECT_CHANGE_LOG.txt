@@ -3,6 +3,26 @@
 ================================================================================
 
 ────────────────────────────────────────────────────────────────────────────────
+Date/Time   : 2026-08-14 15:52 IST
+Feature     : Synchronized OAuth Callback & Redux Allowlist Navigation Fix
+────────────────────────────────────────────────────────────────────────────────
+
+Summary:
+  Fixed First-Time Google OAuth & Email Login land on `/access-pending`:
+  - `GoogleAuthCallback.jsx` and `StratChatLanding.jsx` now dispatch `setSession`, `setProfile`,
+    and `setAllowlistStatus` into Redux state *prior* to calling `navigate('/stratchat/feed')`.
+  - Ensures `ProtectedMemberRoute` reads updated `isAllowlisted: true` state on first-time login
+    without requiring a manual re-check or refresh.
+
+Created / Modified Files:
+  - `stratmen-frontend/src/views/pages/authentication/GoogleAuthCallback.jsx` (Updated)
+  - `stratmen-frontend/src/views/pages/stratchat/StratChatLanding.jsx` (Updated)
+  - `PROJECT_CHANGE_LOG.txt` (Updated)
+
+================================================================================
+
+
+────────────────────────────────────────────────────────────────────────────────
 Date/Time   : 2026-08-14 15:42 IST
 Feature     : Resilient Allowlist Matching, Profile Upsert & Re-check Status
 ────────────────────────────────────────────────────────────────────────────────

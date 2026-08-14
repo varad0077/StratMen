@@ -1,12 +1,31 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+// Helper to load cached allowlist status from localStorage for instant reload persistence
+const loadCachedAllowlist = () => {
+  try {
+    const cached = localStorage.getItem('stratmen_allowlist_status');
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      return {
+        isAllowlisted: !!parsed.isAllowed,
+        isAdmin: !!parsed.isAdmin,
+      };
+    }
+  } catch (e) {
+    console.error('Failed to load cached allowlist status:', e);
+  }
+  return { isAllowlisted: false, isAdmin: false };
+};
+
+const cachedStatus = loadCachedAllowlist();
+
 const initialState = {
   user: null,
   profile: null,
   session: null,
   isAuthenticated: false,
-  isAllowlisted: false,
-  isAdmin: false,
+  isAllowlisted: cachedStatus.isAllowlisted,
+  isAdmin: cachedStatus.isAdmin,
   loading: true,
 };
 
@@ -23,8 +42,19 @@ const authSlice = createSlice({
       state.profile = action.payload;
     },
     setAllowlistStatus: (state, action) => {
-      state.isAllowlisted = action.payload.isAllowed;
-      state.isAdmin = action.payload.isAdmin;
+      state.isAllowlisted = !!action.payload.isAllowed;
+      state.isAdmin = !!action.payload.isAdmin;
+      try {
+        localStorage.setItem(
+          'stratmen_allowlist_status',
+          JSON.stringify({
+            isAllowed: action.payload.isAllowed,
+            isAdmin: action.payload.isAdmin,
+          })
+        );
+      } catch (e) {
+        console.error('Failed to cache allowlist status:', e);
+      }
     },
     setLoading: (state, action) => {
       state.loading = action.payload;
@@ -37,6 +67,11 @@ const authSlice = createSlice({
       state.isAllowlisted = false;
       state.isAdmin = false;
       state.loading = false;
+      try {
+        localStorage.removeItem('stratmen_allowlist_status');
+      } catch (e) {
+        console.error('Failed to clear cached allowlist status:', e);
+      }
     },
   },
 });
