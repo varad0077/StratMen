@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -10,9 +11,10 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { loginWithEmail, loginWithGoogle } from '@/services/authService';
+import { loginWithEmail, loginWithGoogle, getUserProfile } from '@/services/authService';
 import { submitApplication } from '@/services/joinRequestService';
 import { checkAllowlist } from '@/services/allowlistService';
+import { setSession, setProfile, setAllowlistStatus } from '@/store/authSlice';
 import { toast } from 'sonner';
 
 // Zod Schema for Join Us embedded application
@@ -26,6 +28,7 @@ const joinSchema = z.object({
 
 export const StratChatLanding = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // Login form state
   const [loginEmail, setLoginEmail] = useState('');
@@ -57,13 +60,24 @@ export const StratChatLanding = () => {
     try {
       setLoginLoading(true);
       const data = await loginWithEmail(loginEmail, loginPassword);
-      if (data?.user) {
-        const { isAllowed } = await checkAllowlist(data.user.email);
-        if (isAllowed) {
+      if (data?.session && data?.user) {
+        dispatch(setSession(data.session));
+
+        try {
+          const profile = await getUserProfile(data.user.id);
+          if (profile) dispatch(setProfile(profile));
+        } catch (pErr) {
+          console.error('Profile load error:', pErr);
+        }
+
+        const allowlistStatus = await checkAllowlist(data.user.email);
+        dispatch(setAllowlistStatus(allowlistStatus));
+
+        if (allowlistStatus.isAllowed) {
           toast.success('Welcome back to StratChat!');
-          navigate('/stratchat/feed');
+          navigate('/stratchat/feed', { replace: true });
         } else {
-          navigate('/access-pending');
+          navigate('/access-pending', { replace: true });
         }
       }
     } catch (error) {
