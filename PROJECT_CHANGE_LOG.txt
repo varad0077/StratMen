@@ -3,6 +3,24 @@
 ================================================================================
 
 ────────────────────────────────────────────────────────────────────────────────
+Date/Time   : 2026-08-17 19:10 IST
+Feature     : Production Hosting Configurations (Vercel & Netlify SPA Routing)
+────────────────────────────────────────────────────────────────────────────────
+
+Summary:
+  Configured SPA client-side routing rewrites for production hosting:
+  - Added `stratmen-frontend/vercel.json` with wildcard rewrite to `/index.html`
+    to prevent 404 errors on deep page refreshes on Vercel.
+  - Added `stratmen-frontend/public/_redirects` for Netlify / Cloudflare Pages.
+
+Created / Modified Files:
+  - stratmen-frontend/vercel.json (Created)
+  - stratmen-frontend/public/_redirects (Created)
+  - PROJECT_CHANGE_LOG.txt (Updated)
+
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
 Date/Time   : 2026-08-17 15:12 IST
 Feature     : Full Audit Trail Logging Across All Admin Operations & Resilient Querying
 ────────────────────────────────────────────────────────────────────────────────
