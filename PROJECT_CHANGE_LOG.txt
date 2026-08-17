@@ -3,6 +3,71 @@
 ================================================================================
 
 ────────────────────────────────────────────────────────────────────────────────
+Date/Time   : 2026-08-17 15:12 IST
+Feature     : Full Audit Trail Logging Across All Admin Operations & Resilient Querying
+────────────────────────────────────────────────────────────────────────────────
+
+Summary:
+  Fixed audit logs not generating for admin operations:
+  - Added `logAction` calls across all mutations in `allowlistService.js` (add,
+    update, revoke member), `joinRequestService.js` (approve, reject request),
+    and `contentService.js` (create, update, delete activity & milestones).
+  - Enhanced `getAuditLogs` in `adminService.js` with fallback query resilience
+    if foreign-key profile resolution fails.
+  - Enhanced Admin Portal Audit Trail tab UI with entry metadata, table badges,
+    an explicit Refresh button, and empty state guidance.
+
+Created / Modified Files:
+  - stratmen-frontend/src/services/adminService.js (Updated)
+  - stratmen-frontend/src/services/allowlistService.js (Updated)
+  - stratmen-frontend/src/services/joinRequestService.js (Updated)
+  - stratmen-frontend/src/services/contentService.js (Updated)
+  - stratmen-frontend/src/views/pages/stratchat/AdminPortal.jsx (Updated)
+  - PROJECT_CHANGE_LOG.txt (Updated)
+
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+Date/Time   : 2026-08-17 15:06 IST
+Feature     : Fix Tabs UI Component Isolation with React Context
+────────────────────────────────────────────────────────────────────────────────
+
+Summary:
+  Fixed Admin Portal rendering all 5 tabs simultaneously and perpetual loading:
+  - Added `TabsContext` to `src/components/ui/tabs.jsx` so `TabsContent` only
+    renders when `value` strictly matches the active selected tab.
+  - Resolved perpetual "Loading..." state caused by background unselected tabs
+    rendering their loader spinners before their data fetching was triggered.
+
+Created / Modified Files:
+  - stratmen-frontend/src/components/ui/tabs.jsx (Updated)
+  - PROJECT_CHANGE_LOG.txt (Updated)
+
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+Date/Time   : 2026-08-17 15:02 IST
+Feature     : Fix Duplicate Login Alerts & Toast Deduplication in React StrictMode
+────────────────────────────────────────────────────────────────────────────────
+
+Summary:
+  Fixed double "Successfully authenticated with Google!" alert popup on login:
+  - Added `useRef` execution guard to `GoogleAuthCallback.jsx` to ensure OAuth
+    handling only executes once during React 18 StrictMode mount cycles.
+  - Added explicit `{ id }` options to all authentication toasts so Sonner
+    deduplicates alerts rather than stacking duplicates.
+  - Updated `<Toaster />` in `App.jsx` from dark styling to Strategic Editorial
+    light theme (`#FFFFFF` background, `#E1E5DF` border, `#202420` text).
+
+Created / Modified Files:
+  - stratmen-frontend/src/views/pages/authentication/GoogleAuthCallback.jsx (Updated)
+  - stratmen-frontend/src/views/pages/stratchat/StratChatLanding.jsx (Updated)
+  - stratmen-frontend/src/App.jsx (Updated)
+  - PROJECT_CHANGE_LOG.txt (Updated)
+
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
 Date/Time   : 2026-08-17 14:44 IST
 Feature     : Fix Join Request Public Submission RLS Policy & .select() Call
 ────────────────────────────────────────────────────────────────────────────────

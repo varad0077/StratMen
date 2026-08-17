@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { supabase } from '@/config/supabaseClient';
@@ -11,8 +11,13 @@ import { toast } from 'sonner';
 export const GoogleAuthCallback = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const hasExecutedRef = useRef(false);
 
   useEffect(() => {
+    // Prevent double execution in React StrictMode
+    if (hasExecutedRef.current) return;
+    hasExecutedRef.current = true;
+
     const handleAuthCallback = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
@@ -34,7 +39,7 @@ export const GoogleAuthCallback = () => {
           dispatch(setLoading(false));
 
           if (allowlistStatus.isAllowed) {
-            toast.success('Successfully authenticated with Google!');
+            toast.success('Successfully authenticated with Google!', { id: 'google-auth-success' });
             navigate('/stratchat/feed', { replace: true });
           } else {
             navigate('/access-pending', { replace: true });
@@ -45,7 +50,7 @@ export const GoogleAuthCallback = () => {
         }
       } catch (error) {
         console.error('OAuth callback error:', error);
-        toast.error('Google authentication failed. Please try again.');
+        toast.error('Google authentication failed. Please try again.', { id: 'google-auth-error' });
         dispatch(setLoading(false));
         navigate('/stratchat', { replace: true });
       }

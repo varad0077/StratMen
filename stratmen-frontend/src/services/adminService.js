@@ -34,49 +34,72 @@ export const getDashboardStats = async () => {
 /**
  * Get admin audit logs (admin only).
  * @param {number} [page=1]
- * @param {number} [limit=20]
+ * @param {number} [limit=50]
  * @returns {Promise<{logs: Array, total: number}>}
  */
-export const getAuditLogs = async (page = 1, limit = 20) => {
+export const getAuditLogs = async (page = 1, limit = 50) => {
   const from = (page - 1) * limit;
   const to = from + limit - 1;
 
+  try {
+    const { data, error, count } = await supabase
+      .from('admin_action_logs')
+      .select(`
+        *,
+        admin:profiles(id, full_name, email)
+      `, { count: 'exact' })
+      .order('created_at', { ascending: false })
+      .range(from, to);
+
+    if (!error && data) {
+      return { logs: data, total: count !== null ? count : data.length };
+    }
+  } catch (joinErr) {
+    console.warn('Joined audit logs query error, attempting flat query:', joinErr);
+  }
+
+  // Fallback flat query
   const { data, error, count } = await supabase
     .from('admin_action_logs')
-    .select(`
-      *,
-      admin:profiles!admin_id(id, full_name, email)
-    `, { count: 'exact' })
+    .select('*', { count: 'exact' })
     .order('created_at', { ascending: false })
     .range(from, to);
 
-  if (error) throw error;
-  return { logs: data || [], total: count || 0 };
+  if (error) {
+    console.error('Audit logs query error:', error);
+    return { logs: [], total: 0 };
+  }
+  return { logs: data || [], total: count !== null ? count : (data?.length || 0) };
 };
 
 /**
  * Log an admin action to the audit trail.
  * @param {string} action - Description of the action.
  * @param {string} [targetTable] - Target table name.
- * @param {string} [targetId] - Target record ID.
+ * @param {string|number} [targetId] - Target record ID.
  * @param {Object} [details] - Additional JSONB details.
  * @returns {Promise<void>}
  */
 export const logAction = async (action, targetTable = null, targetId = null, details = null) => {
-  const { data: { user } } = await supabase.auth.getUser();
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
 
-  const { error } = await supabase
-    .from('admin_action_logs')
-    .insert([{
-      admin_id: user.id,
-      action,
-      target_table: targetTable,
-      target_id: targetId,
-      details,
-    }]);
+    const { error } = await supabase
+      .from('admin_action_logs')
+      .insert([{
+        admin_id: user.id,
+        action,
+        target_table: targetTable,
+        target_id: targetId ? String(targetId) : null,
+        details: details || null,
+      }]);
 
-  if (error) {
-    console.error('Failed to log admin action:', error.message);
+    if (error) {
+      console.warn('Audit log insert note:', error.message);
+    }
+  } catch (err) {
+    console.error('Audit log exception:', err);
   }
 };
 

@@ -53,6 +53,8 @@ export const getRequests = async (status = null) => {
  * @param {string} [adminNotes]
  * @returns {Promise<Object>}
  */
+import { logAction } from './adminService';
+
 export const updateRequestStatus = async (requestId, status, adminNotes = '') => {
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -86,6 +88,13 @@ export const updateRequestStatus = async (requestId, status, adminNotes = '') =>
       throw allowlistError;
     }
   }
+
+  await logAction(
+    `${status === 'approved' ? 'Approved' : 'Rejected'} join request for ${request?.full_name} (${request?.email})`,
+    'join_requests',
+    requestId,
+    { status, admin_notes: adminNotes }
+  );
 
   return request;
 };

@@ -1,4 +1,5 @@
 import { supabase } from '@/config/supabaseClient';
+import { logAction } from './adminService';
 
 /* ══════════════════════════════════════════════
    ACTIVITIES
@@ -29,6 +30,8 @@ export const createActivity = async (activityData) => {
     .single();
 
   if (error) throw error;
+
+  await logAction(`Created activity: ${activityData.title}`, 'activities', data?.id, activityData);
   return data;
 };
 
@@ -41,10 +44,13 @@ export const updateActivity = async (id, updates) => {
     .single();
 
   if (error) throw error;
+
+  await logAction(`Updated activity #${id}`, 'activities', id, updates);
   return data;
 };
 
 export const deleteActivity = async (id) => {
+  await logAction(`Deleted activity #${id}`, 'activities', id);
   const { error } = await supabase.from('activities').delete().eq('id', id);
   if (error) throw error;
 };

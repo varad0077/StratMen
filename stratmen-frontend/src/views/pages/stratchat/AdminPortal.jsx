@@ -531,22 +531,42 @@ export const AdminPortal = () => {
 
         {/* ── TAB 5: AUDIT LOGS ── */}
         <TabsContent value="logs">
-          <Card className="p-6">
-            <h3 className="text-base font-bold text-text-dark font-heading mb-4">Admin Audit Logs</h3>
+          <Card className="p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-base font-bold text-text-dark font-heading">Admin Audit Trail</h3>
+                <p className="text-xs text-text-muted mt-0.5">Historical log of all administrative actions and member status changes.</p>
+              </div>
+              <Button size="sm" variant="outline" onClick={fetchLogsData} disabled={logsLoading}>
+                Refresh Logs
+              </Button>
+            </div>
+
             {logsLoading ? (
-              <Loader text="Loading logs..." />
-            ) : (
+              <Loader text="Loading audit logs..." />
+            ) : logs.length > 0 ? (
               <div className="space-y-2">
                 {logs.map((log) => (
-                  <div key={log.id} className="p-3 rounded-lg border border-border-subtle bg-bg-warm text-xs flex justify-between items-center">
-                    <div>
-                      <span className="font-semibold text-text-dark">{log.admin?.full_name || 'Admin'}</span>
-                      <span className="text-text-mid">: {log.action}</span>
-                      {log.target_table && <span className="text-text-muted"> ({log.target_table})</span>}
+                  <div key={log.id} className="p-3.5 rounded-lg border border-border-subtle bg-bg-warm text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div className="flex items-center gap-2.5 flex-wrap">
+                      <span className="font-semibold text-text-dark">
+                        {log.admin?.full_name || log.admin?.email || 'Admin'}
+                      </span>
+                      <span className="text-text-mid">{log.action}</span>
+                      {log.target_table && (
+                        <span className="px-2 py-0.5 rounded bg-bg-white border border-border-subtle text-[10px] font-mono text-text-muted">
+                          {log.target_table}
+                        </span>
+                      )}
                     </div>
-                    <span className="text-text-muted shrink-0 ml-4">{formatDate(log.created_at)}</span>
+                    <span className="text-text-muted shrink-0 text-[11px]">{formatDate(log.created_at)}</span>
                   </div>
                 ))}
+              </div>
+            ) : (
+              <div className="py-8 text-center bg-bg-warm rounded-lg border border-border-subtle">
+                <p className="text-xs text-text-muted italic">No audit log entries recorded yet.</p>
+                <p className="text-[11px] text-text-muted mt-1">Actions like adding allowlist members, changing roles, approving requests, or suspending users will be recorded here.</p>
               </div>
             )}
           </Card>

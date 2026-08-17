@@ -81,7 +81,7 @@ export const StratChatLanding = () => {
         dispatch(setAllowlistStatus(allowlistStatus));
 
         if (allowlistStatus.isAllowed) {
-          toast.success('Welcome back to StratChat!');
+          toast.success('Welcome back to StratChat!', { id: 'email-login-success' });
           navigate('/stratchat/feed', { replace: true });
         } else {
           navigate('/access-pending', { replace: true });
@@ -89,7 +89,7 @@ export const StratChatLanding = () => {
       }
     } catch (error) {
       console.error('Login error:', error);
-      toast.error(error.message || 'Failed to log in. Please check your credentials.');
+      toast.error(error.message || 'Failed to log in. Please check your credentials.', { id: 'email-login-error' });
     } finally {
       setLoginLoading(false);
     }
@@ -102,7 +102,7 @@ export const StratChatLanding = () => {
       await loginWithGoogle();
     } catch (error) {
       console.error('Google login error:', error);
-      toast.error(error.message || 'Failed to initiate Google OAuth.');
+      toast.error(error.message || 'Failed to initiate Google OAuth.', { id: 'google-oauth-error' });
       setGoogleLoading(false);
     }
   };
@@ -113,11 +113,11 @@ export const StratChatLanding = () => {
       setAppLoading(true);
       await submitApplication(formData);
       setAppSubmitted(true);
-      toast.success('Application submitted successfully!');
+      toast.success('Application submitted successfully!', { id: 'join-application-success' });
       reset();
     } catch (error) {
       console.error('Application submit error:', error);
-      toast.error(error.message || 'Failed to submit application. Please try again.');
+      toast.error(error.message || 'Failed to submit application. Please try again.', { id: 'join-application-error' });
     } finally {
       setAppLoading(false);
     }

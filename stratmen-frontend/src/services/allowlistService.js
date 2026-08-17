@@ -47,6 +47,8 @@ export const getAllowlist = async (search = '') => {
   return data || [];
 };
 
+import { logAction } from './adminService';
+
 /**
  * Add a member to the allowlist (admin only).
  * @param {{email: string, name: string, role?: string, is_admin?: boolean}} memberData
@@ -68,6 +70,14 @@ export const addMember = async (memberData) => {
     .single();
 
   if (error) throw error;
+
+  await logAction(
+    `Added member to allowlist: ${memberData.name} (${memberData.email})`,
+    'allowlist',
+    memberData.email,
+    { role: memberData.role, is_admin: memberData.is_admin }
+  );
+
   return data;
 };
 
@@ -86,6 +96,9 @@ export const updateMember = async (email, updates) => {
     .single();
 
   if (error) throw error;
+
+  await logAction(`Updated allowlist member: ${email}`, 'allowlist', email, updates);
+
   return data;
 };
 
@@ -101,4 +114,6 @@ export const revokeMember = async (email) => {
     .eq('email', email.toLowerCase());
 
   if (error) throw error;
+
+  await logAction(`Revoked allowlist access: ${email}`, 'allowlist', email);
 };

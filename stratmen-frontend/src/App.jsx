@@ -16,12 +16,12 @@ export const App = () => {
         position="top-right"
         richColors
         closeButton
-        theme="dark"
+        theme="light"
         toastOptions={{
           style: {
-            background: '#1A1A1A',
-            border: '1px solid #2A2A2A',
-            color: '#F5F5F5',
+            background: '#FFFFFF',
+            border: '1px solid #E1E5DF',
+            color: '#202420',
           },
         }}
       />
