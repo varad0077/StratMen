@@ -14,9 +14,7 @@ export const submitApplication = async (data) => {
       phone: data.phone,
       linkedin_url: data.linkedin_url || null,
       reason: data.reason,
-    }])
-    .select()
-    .single();
+    }]);
 
   if (error) {
     if (error.code === '23505') {
@@ -24,7 +22,7 @@ export const submitApplication = async (data) => {
     }
     throw error;
   }
-  return result;
+  return { success: true };
 };
 
 /**

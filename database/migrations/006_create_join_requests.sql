@@ -18,5 +18,5 @@ CREATE INDEX IF NOT EXISTS idx_jr_status ON public.join_requests(status);
 CREATE INDEX IF NOT EXISTS idx_jr_created ON public.join_requests(created_at DESC);
 
 ALTER TABLE public.join_requests ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Join requests public insert" ON public.join_requests FOR INSERT WITH CHECK (true);
-CREATE POLICY "Join requests admin manage" ON public.join_requests FOR ALL USING (is_admin());
+CREATE POLICY "Join requests public insert" ON public.join_requests FOR INSERT TO anon, authenticated WITH CHECK (true);
+CREATE POLICY "Join requests admin manage" ON public.join_requests FOR ALL TO authenticated USING (is_admin());

@@ -165,8 +165,8 @@ CREATE POLICY "Homepage admin write" ON public.homepage_content FOR ALL USING (i
 
 ```sql
 ALTER TABLE public.join_requests ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Join request public submit" ON public.join_requests FOR INSERT WITH CHECK (true);
-CREATE POLICY "Join request admin manage" ON public.join_requests FOR ALL USING (is_admin());
+CREATE POLICY "Join request public submit" ON public.join_requests FOR INSERT TO anon, authenticated WITH CHECK (true);
+CREATE POLICY "Join request admin manage" ON public.join_requests FOR ALL TO authenticated USING (is_admin());
 ```
 
 ---

@@ -3,6 +3,27 @@
 ================================================================================
 
 ────────────────────────────────────────────────────────────────────────────────
+Date/Time   : 2026-08-17 14:44 IST
+Feature     : Fix Join Request Public Submission RLS Policy & .select() Call
+────────────────────────────────────────────────────────────────────────────────
+
+Summary:
+  Fixed "new row violates row-level security policy for table 'join_requests'" error:
+  - In `joinRequestService.js`, removed `.select().single()` from `submitApplication()`
+    which was attempting to SELECT the inserted row on unauthenticated clients.
+  - Updated RLS SQL migration scripts to explicitly specify `TO anon, authenticated`
+    for public insert permissions on `public.join_requests`.
+
+Created / Modified Files:
+  - stratmen-frontend/src/services/joinRequestService.js (Updated)
+  - database/combined_migration.sql (Updated)
+  - database/migrations/006_create_join_requests.sql (Updated)
+  - docs/06_SECURITY.md (Updated)
+  - PROJECT_CHANGE_LOG.txt (Updated)
+
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
 Date/Time   : 2026-08-17 14:10 IST
 Feature     : Full Visual Theme Redesign — Strategic Editorial Theme
 ────────────────────────────────────────────────────────────────────────────────
