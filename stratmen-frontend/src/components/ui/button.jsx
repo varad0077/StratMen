@@ -3,21 +3,27 @@ import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-dark disabled:pointer-events-none disabled:opacity-50 cursor-pointer',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-deep focus-visible:ring-offset-2 focus-visible:ring-offset-bg-warm disabled:pointer-events-none disabled:opacity-50 cursor-pointer',
   {
     variants: {
       variant: {
-        default: 'bg-accent text-bg-dark hover:bg-accent-hover shadow-sm hover:shadow-glow',
+        // Deep professional green — primary actions
+        default: 'bg-green-deep text-white hover:bg-[#274a38] shadow-sm hover:shadow-card',
+        // Danger / destructive
         destructive: 'bg-danger text-white hover:bg-danger-hover',
-        outline: 'border border-border-light bg-transparent text-text-primary hover:bg-surface-elevated hover:border-accent/50',
-        secondary: 'bg-surface-elevated text-text-primary hover:bg-border-light',
-        ghost: 'text-text-secondary hover:text-text-primary hover:bg-surface-elevated',
-        link: 'text-accent underline-offset-4 hover:underline',
+        // Subtle outlined — secondary actions
+        outline: 'border border-border-subtle bg-bg-white text-text-dark hover:bg-green-soft hover:border-border-mid',
+        // Soft green — selected / secondary states
+        secondary: 'bg-green-soft text-green-deep hover:bg-[#d3eadb]',
+        // Ghost — tertiary / icon actions
+        ghost: 'text-text-mid hover:text-text-dark hover:bg-green-soft',
+        // Inline link
+        link: 'text-green-deep underline-offset-4 hover:underline',
       },
       size: {
         default: 'h-10 px-4 py-2',
         sm: 'h-8 px-3 text-xs',
-        lg: 'h-12 px-6 text-base',
+        lg: 'h-11 px-6 text-base',
         icon: 'h-10 w-10',
         'icon-sm': 'h-8 w-8',
       },

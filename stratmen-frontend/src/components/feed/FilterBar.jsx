@@ -10,7 +10,7 @@ export const FilterBar = ({ activeFilter, onFilterChange }) => {
   ];
 
   return (
-    <div className="flex items-center gap-2 p-1.5 rounded-xl border border-border bg-surface-dark overflow-x-auto">
+    <div className="flex items-center gap-2 p-1.5 rounded-xl border border-border-subtle bg-bg-white overflow-x-auto">
       {filters.map((tab) => {
         const Icon = tab.icon;
         const isActive = activeFilter === tab.key;
@@ -19,10 +19,10 @@ export const FilterBar = ({ activeFilter, onFilterChange }) => {
             key={tab.key}
             onClick={() => onFilterChange(tab.key)}
             className={cn(
-              'flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 cursor-pointer whitespace-nowrap',
+              'flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 cursor-pointer whitespace-nowrap',
               isActive
-                ? 'bg-accent text-bg-dark shadow-sm'
-                : 'text-text-secondary hover:text-text-primary hover:bg-surface-elevated'
+                ? 'bg-green-soft text-green-deep shadow-sm'
+                : 'text-text-mid hover:text-text-dark hover:bg-bg-warm'
             )}
           >
             <Icon className="h-3.5 w-3.5" />

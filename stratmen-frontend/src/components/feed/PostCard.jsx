@@ -70,6 +70,7 @@ export const PostCard = ({ post, currentUser, isAdmin, onPostDeleted }) => {
       setDeleteConfirmOpen(false);
       if (onPostDeleted) onPostDeleted(post.id);
     } catch (error) {
+      console.error('Delete post error:', error);
       toast.error('Failed to delete post');
     } finally {
       setDeleting(false);
@@ -81,19 +82,24 @@ export const PostCard = ({ post, currentUser, isAdmin, onPostDeleted }) => {
       await togglePin(post.id, post.is_pinned);
       toast.success(post.is_pinned ? 'Post unpinned' : 'Post pinned to top');
     } catch (error) {
+      console.error('Toggle pin error:', error);
       toast.error('Failed to toggle pin status');
     }
   };
 
   return (
     <>
-      <div className={`p-5 rounded-xl border bg-surface-dark space-y-4 transition-all duration-200 ${
-        post.is_pinned ? 'border-accent/40 shadow-glow/30' : 'border-border'
-      }`}>
+      <div
+        className={`p-5 rounded-xl border bg-bg-white shadow-card transition-all duration-200 space-y-4 ${
+          post.is_pinned
+            ? 'border-green-deep/30 bg-green-soft/30'
+            : 'border-border-subtle'
+        }`}
+      >
         {/* Pinned Badge */}
         {post.is_pinned && (
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-accent border-b border-border/50 pb-2">
-            <Pin className="h-3.5 w-3.5 fill-accent" />
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-green-deep border-b border-border-subtle pb-2">
+            <Pin className="h-3.5 w-3.5 fill-green-deep" />
             <span>Pinned Announcement</span>
           </div>
         )}
@@ -104,8 +110,8 @@ export const PostCard = ({ post, currentUser, isAdmin, onPostDeleted }) => {
             <UserAvatar src={post.author?.avatar_url} name={authorName} />
             <div>
               <div className="flex items-center gap-2">
-                <h4 className="text-sm font-bold text-text-primary">{authorName}</h4>
-                <Badge variant={post.author?.role === 'admin' ? 'default' : 'secondary'} className="text-[10px]">
+                <h4 className="text-sm font-bold text-text-dark">{authorName}</h4>
+                <Badge variant={post.author?.role === 'admin' ? 'admin' : 'secondary'} className="text-[10px]">
                   {post.author?.role === 'admin' ? 'Admin' : 'Member'}
                 </Badge>
               </div>
@@ -113,14 +119,14 @@ export const PostCard = ({ post, currentUser, isAdmin, onPostDeleted }) => {
             </div>
           </div>
 
-          {/* Action Menu (Pin / Delete) */}
+          {/* Action Menu */}
           <div className="flex items-center gap-1">
             {isAdmin && (
               <Button
                 variant="ghost"
                 size="icon-sm"
                 onClick={handleTogglePin}
-                className={post.is_pinned ? 'text-accent' : 'text-text-muted hover:text-accent'}
+                className={post.is_pinned ? 'text-green-deep' : 'text-text-muted hover:text-green-deep'}
                 title={post.is_pinned ? 'Unpin post' : 'Pin post'}
               >
                 <Pin className="h-4 w-4" />
@@ -141,7 +147,7 @@ export const PostCard = ({ post, currentUser, isAdmin, onPostDeleted }) => {
         </div>
 
         {/* Content Text */}
-        <p className="text-sm text-text-primary leading-relaxed whitespace-pre-line">
+        <p className="text-sm text-text-dark leading-relaxed whitespace-pre-line">
           {post.content}
         </p>
 
@@ -149,28 +155,28 @@ export const PostCard = ({ post, currentUser, isAdmin, onPostDeleted }) => {
         {post.image_url && (
           <div
             onClick={() => setLightboxOpen(true)}
-            className="rounded-lg overflow-hidden border border-border cursor-pointer group relative"
+            className="rounded-lg overflow-hidden border border-border-subtle cursor-pointer group relative"
           >
             <img
               src={post.image_url}
               alt="Post media"
-              className="w-full max-h-96 object-cover group-hover:scale-102 transition-transform duration-300"
+              className="w-full max-h-96 object-cover group-hover:scale-[1.02] transition-transform duration-300"
             />
-            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs font-semibold text-white">
+            <div className="absolute inset-0 bg-text-dark/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs font-semibold text-white">
               Click to view full image
             </div>
           </div>
         )}
 
         {/* Action Bar */}
-        <div className="flex items-center justify-between pt-2 border-t border-border-light/40">
+        <div className="flex items-center justify-between pt-2 border-t border-border-subtle">
           <div className="flex items-center gap-1">
             {/* Like */}
             <Button
               variant="ghost"
               size="sm"
               onClick={handleLikeToggle}
-              className={liked ? 'text-danger hover:text-danger' : 'text-text-muted hover:text-text-primary'}
+              className={liked ? 'text-danger hover:text-danger' : 'text-text-muted hover:text-text-dark'}
             >
               <Heart className={`h-4 w-4 mr-1.5 ${liked ? 'fill-danger text-danger' : ''}`} />
               <span>{likeCount}</span>
@@ -181,7 +187,7 @@ export const PostCard = ({ post, currentUser, isAdmin, onPostDeleted }) => {
               variant="ghost"
               size="sm"
               onClick={() => setShowComments(!showComments)}
-              className="text-text-muted hover:text-text-primary"
+              className="text-text-muted hover:text-text-dark"
             >
               <MessageSquare className="h-4 w-4 mr-1.5" />
               <span>{post.comment_count || 0}</span>
@@ -194,10 +200,10 @@ export const PostCard = ({ post, currentUser, isAdmin, onPostDeleted }) => {
               variant="ghost"
               size="icon-sm"
               onClick={handleBookmarkToggle}
-              className={bookmarked ? 'text-accent' : 'text-text-muted hover:text-accent'}
+              className={bookmarked ? 'text-green-deep' : 'text-text-muted hover:text-green-deep'}
               title="Bookmark post"
             >
-              <Bookmark className={`h-4 w-4 ${bookmarked ? 'fill-accent' : ''}`} />
+              <Bookmark className={`h-4 w-4 ${bookmarked ? 'fill-green-deep' : ''}`} />
             </Button>
 
             {/* Copy Link */}
@@ -205,7 +211,7 @@ export const PostCard = ({ post, currentUser, isAdmin, onPostDeleted }) => {
               variant="ghost"
               size="icon-sm"
               onClick={handleCopyLink}
-              className="text-text-muted hover:text-text-primary"
+              className="text-text-muted hover:text-text-dark"
               title="Copy post link"
             >
               <Share2 className="h-4 w-4" />

@@ -20,6 +20,7 @@ export const CommentSection = ({ postId, currentUser, isAdmin }) => {
       setComments(data);
     } catch (error) {
       console.error('Error fetching comments:', error);
+      toast.error('Failed to load comments.');
     } finally {
       setLoading(false);
     }
@@ -40,6 +41,7 @@ export const CommentSection = ({ postId, currentUser, isAdmin }) => {
       fetchComments();
       toast.success('Comment added');
     } catch (error) {
+      console.error('Add comment error:', error);
       toast.error('Failed to add comment');
     } finally {
       setSubmitting(false);
@@ -52,13 +54,14 @@ export const CommentSection = ({ postId, currentUser, isAdmin }) => {
       setComments((prev) => prev.filter((c) => c.id !== commentId));
       toast.success('Comment deleted');
     } catch (error) {
+      console.error('Delete comment error:', error);
       toast.error('Failed to delete comment');
     }
   };
 
   return (
-    <div className="pt-3 space-y-4 border-t border-border-light/60">
-      {/* Input */}
+    <div className="pt-3 space-y-4 border-t border-border-subtle">
+      {/* Comment Input */}
       <form onSubmit={handleAddComment} className="flex items-center gap-2">
         <UserAvatar
           src={currentUser?.user_metadata?.avatar_url}
@@ -89,9 +92,9 @@ export const CommentSection = ({ postId, currentUser, isAdmin }) => {
             return (
               <div key={comment.id} className="flex items-start gap-2.5 group">
                 <UserAvatar src={comment.author?.avatar_url} name={authorName} size="sm" />
-                <div className="flex-1 bg-surface-elevated/50 p-2.5 rounded-lg border border-border/40">
+                <div className="flex-1 bg-bg-warm p-2.5 rounded-lg border border-border-subtle">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-text-primary">{authorName}</span>
+                    <span className="text-xs font-semibold text-text-dark">{authorName}</span>
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] text-text-muted">{formatRelativeTime(comment.created_at)}</span>
                       {canDelete && (
@@ -105,7 +108,7 @@ export const CommentSection = ({ postId, currentUser, isAdmin }) => {
                       )}
                     </div>
                   </div>
-                  <p className="text-xs text-text-secondary mt-1">{comment.content}</p>
+                  <p className="text-xs text-text-mid mt-1 leading-relaxed">{comment.content}</p>
                 </div>
               </div>
             );

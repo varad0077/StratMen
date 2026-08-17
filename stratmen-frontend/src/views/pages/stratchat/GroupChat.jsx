@@ -63,30 +63,29 @@ export const GroupChat = () => {
       await deleteMessage(messageId);
       toast.success('Message deleted');
     } catch (error) {
+      console.error('Delete message error:', error);
       toast.error('Failed to delete message');
     }
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-6rem)] max-w-3xl mx-auto rounded-xl border border-border bg-surface-dark overflow-hidden">
+    <div className="flex flex-col h-[calc(100vh-6rem)] max-w-3xl mx-auto rounded-xl border border-border-subtle bg-bg-white shadow-card overflow-hidden">
       {/* Chat Window Header */}
-      <div className="p-4 border-b border-border flex items-center justify-between bg-surface-elevated/50">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/15 text-accent border border-accent/30">
-            <MessageSquare className="h-5 w-5" />
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-text-primary">StratChat Group Room</h3>
-            <p className="text-xs text-text-muted flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-success inline-block animate-pulse" />
-              Realtime WebSocket Feed Enabled
-            </p>
-          </div>
+      <div className="p-4 border-b border-border-subtle flex items-center gap-3 bg-bg-white">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-soft">
+          <MessageSquare className="h-5 w-5 text-green-deep" />
+        </div>
+        <div>
+          <h3 className="text-sm font-bold text-text-dark font-heading">StratChat Group Room</h3>
+          <p className="text-xs text-text-muted flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-success inline-block" />
+            Realtime WebSocket Feed Enabled
+          </p>
         </div>
       </div>
 
       {/* Chat Messages Feed */}
-      <div className="flex-1 p-4 overflow-y-auto space-y-4">
+      <div className="flex-1 p-4 overflow-y-auto space-y-4 bg-bg-warm">
         {loading ? (
           <div className="h-full flex items-center justify-center">
             <Loader text="Connecting to Realtime Group Chat..." />
@@ -103,7 +102,7 @@ export const GroupChat = () => {
           ))
         ) : (
           <div className="h-full flex flex-col items-center justify-center text-center p-6 text-text-muted space-y-2">
-            <MessageSquare className="h-10 w-10 text-border-light" />
+            <MessageSquare className="h-10 w-10 text-border-mid" />
             <p className="text-sm">No messages sent yet in Group Chat.</p>
             <p className="text-xs">Be the first leader to say hello!</p>
           </div>
@@ -112,14 +111,14 @@ export const GroupChat = () => {
       </div>
 
       {/* Chat Input Bar */}
-      <div className="p-3 border-t border-border bg-surface-elevated/40 space-y-2">
+      <div className="p-3 border-t border-border-subtle bg-bg-white space-y-2">
         {/* Attachment preview */}
         {imagePreview && (
           <div className="relative inline-block">
-            <img src={imagePreview} alt="Preview" className="h-20 rounded-lg border border-border object-cover" />
+            <img src={imagePreview} alt="Preview" className="h-20 rounded-lg border border-border-subtle object-cover" />
             <button
               onClick={removeImage}
-              className="absolute -top-2 -right-2 p-1 rounded-full bg-black text-white hover:bg-danger transition-colors cursor-pointer"
+              className="absolute -top-2 -right-2 p-1 rounded-full bg-text-dark text-white hover:bg-danger transition-colors cursor-pointer"
             >
               <X className="h-3 w-3" />
             </button>
@@ -141,7 +140,7 @@ export const GroupChat = () => {
               variant="ghost"
               size="icon"
               onClick={() => fileInputRef.current?.click()}
-              className="text-text-muted hover:text-accent cursor-pointer"
+              className="text-text-muted hover:text-green-deep cursor-pointer"
             >
               <Image className="h-5 w-5" />
             </Button>
@@ -158,7 +157,7 @@ export const GroupChat = () => {
           <Button
             type="submit"
             disabled={sending || (!content.trim() && !imageFile)}
-            className="h-11 px-5 font-semibold shadow-glow"
+            className="h-11 px-5 font-semibold"
           >
             <Send className="h-4 w-4" />
           </Button>

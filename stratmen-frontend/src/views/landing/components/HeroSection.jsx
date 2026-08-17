@@ -1,97 +1,121 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles, Shield, Users, Calendar } from 'lucide-react';
+import { ArrowRight, Calendar, Building2, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export const HeroSection = ({ content }) => {
-  const title = content?.hero_title?.title || "Building Tomorrow's Strategic Leaders";
-  const subtitle = content?.hero_title?.content || "A community of founders, leads, and thinkers dedicated to strategic growth and professional excellence.";
+  const subtitle =
+    content?.hero_title?.content ||
+    'A professional community of founders, leaders, and thinkers dedicated to strategic growth, meaningful collaboration, and professional excellence.';
 
   return (
-    <section className="relative overflow-hidden py-20 lg:py-32 gradient-hero">
-      {/* Background glowing ambient light */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/10 rounded-full blur-[120px] pointer-events-none" />
+    <section className="relative overflow-hidden hero-pattern pt-32 pb-20 lg:pt-40 lg:pb-28">
+      {/* Subtle gradient vignette over the dot grid — edges only */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(247,247,242,0) 40%, rgba(247,247,242,0.7) 100%)',
+        }}
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center max-w-3xl mx-auto space-y-6">
+        <div className="text-center max-w-3xl mx-auto space-y-8">
+
+          {/* Editorial label */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-accent/30 bg-accent/10 text-accent text-xs font-semibold"
+            transition={{ duration: 0.45 }}
+            className="flex items-center justify-center gap-2"
           >
-            <Sparkles className="h-3.5 w-3.5" />
-            <span>StratMen Foundation</span>
+            <span className="inline-block w-5 h-[2px] bg-green-deep rounded-full" />
+            <span className="editorial-label text-text-mid tracking-[0.12em]">
+              StratMen Foundation
+            </span>
+            <span className="inline-block w-5 h-[2px] bg-green-deep rounded-full" />
           </motion.div>
 
+          {/* Hero Heading — editorial two-line split */}
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-text-primary tracking-tight leading-tight"
+            transition={{ duration: 0.5, delay: 0.08 }}
+            className="font-heading font-extrabold text-[3rem] sm:text-[3.75rem] lg:text-[4.5rem] leading-[1.08] tracking-tight"
           >
-            {title.split('Strategic Leaders')[0]}
-            <span className="text-accent block sm:inline"> Strategic Leaders</span>
+            <span className="block text-text-dark">Building Tomorrow's</span>
+            <span className="block text-green-mint">Strategic Leaders.</span>
           </motion.h1>
 
+          {/* Supporting subtitle */}
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-lg sm:text-xl text-text-secondary leading-relaxed"
+            transition={{ duration: 0.5, delay: 0.16 }}
+            className="text-lg sm:text-xl text-text-mid leading-relaxed max-w-2xl mx-auto"
           >
             {subtitle}
           </motion.p>
 
+          {/* CTA Buttons */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
+            transition={{ duration: 0.5, delay: 0.24 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2"
           >
             <Link to="/stratchat">
-              <Button size="lg" className="rounded-full font-semibold shadow-glow hover:shadow-glow-strong text-base px-8">
+              <Button size="lg" className="font-semibold px-8 text-base">
                 Join StratChat
-                <ArrowRight className="h-5 w-5 ml-2" />
+                <ArrowRight className="h-5 w-5" />
               </Button>
             </Link>
             <Link to="/activities">
-              <Button size="lg" variant="outline" className="rounded-full text-base px-8">
+              <Button size="lg" variant="outline" className="font-medium px-8 text-base">
                 Explore Activities
               </Button>
             </Link>
           </motion.div>
 
-          {/* Quick Pillar badges */}
+          {/* Community pillars — clean, text-based */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="pt-12 grid grid-cols-3 gap-4 max-w-xl mx-auto border-t border-border/50 text-left"
+            transition={{ duration: 0.6, delay: 0.38 }}
+            className="pt-10 border-t border-border-subtle"
           >
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-surface-dark/60 border border-border/40">
-              <Calendar className="h-5 w-5 text-accent shrink-0" />
-              <div>
-                <p className="text-xs font-semibold text-text-primary">Sunday Sessions</p>
-                <p className="text-[10px] text-text-muted">Weekly meets</p>
+            <div className="grid grid-cols-3 gap-6 max-w-lg mx-auto text-center">
+              <div className="space-y-1.5">
+                <div className="flex justify-center">
+                  <div className="p-2 rounded-lg bg-green-soft">
+                    <Calendar className="h-4 w-4 text-green-deep" />
+                  </div>
+                </div>
+                <p className="text-xs font-semibold text-text-dark">Sunday Sessions</p>
+                <p className="text-[11px] text-text-muted">Weekly meets</p>
               </div>
-            </div>
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-surface-dark/60 border border-border/40">
-              <Shield className="h-5 w-5 text-accent shrink-0" />
-              <div>
-                <p className="text-xs font-semibold text-text-primary">Industry Visits</p>
-                <p className="text-[10px] text-text-muted">On-site exposure</p>
+              <div className="space-y-1.5">
+                <div className="flex justify-center">
+                  <div className="p-2 rounded-lg bg-green-soft">
+                    <Building2 className="h-4 w-4 text-green-deep" />
+                  </div>
+                </div>
+                <p className="text-xs font-semibold text-text-dark">Industry Visits</p>
+                <p className="text-[11px] text-text-muted">On-site exposure</p>
               </div>
-            </div>
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-surface-dark/60 border border-border/40">
-              <Users className="h-5 w-5 text-accent shrink-0" />
-              <div>
-                <p className="text-xs font-semibold text-text-primary">Peer Network</p>
-                <p className="text-[10px] text-text-muted">40+ Members</p>
+              <div className="space-y-1.5">
+                <div className="flex justify-center">
+                  <div className="p-2 rounded-lg bg-green-soft">
+                    <Users className="h-4 w-4 text-green-deep" />
+                  </div>
+                </div>
+                <p className="text-xs font-semibold text-text-dark">Peer Network</p>
+                <p className="text-[11px] text-text-muted">40+ Members</p>
               </div>
             </div>
           </motion.div>
+
         </div>
       </div>
     </section>

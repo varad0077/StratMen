@@ -26,8 +26,8 @@ export const ChatMessage = ({ message, isOwn, isAdmin, onDelete }) => {
         <div
           className={`relative p-3 rounded-2xl text-sm leading-relaxed ${
             isOwn
-              ? 'bg-accent text-bg-dark font-medium rounded-tr-none shadow-glow/20'
-              : 'bg-surface-elevated text-text-primary rounded-tl-none border border-border/50'
+              ? 'bg-green-deep text-white font-medium rounded-tr-none shadow-sm'
+              : 'bg-bg-white text-text-dark rounded-tl-none border border-border-subtle shadow-sm'
           }`}
         >
           {message.image_url && (
@@ -42,7 +42,7 @@ export const ChatMessage = ({ message, isOwn, isAdmin, onDelete }) => {
 
           <span
             className={`block text-[10px] mt-1 text-right ${
-              isOwn ? 'text-bg-dark/70' : 'text-text-muted'
+              isOwn ? 'text-white/60' : 'text-text-muted'
             }`}
           >
             {formatRelativeTime(message.created_at)}

@@ -3,16 +3,24 @@ import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
 
 const badgeVariants = cva(
-  'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors',
+  'inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors',
   {
     variants: {
       variant: {
-        default: 'border-transparent bg-accent text-bg-dark',
-        secondary: 'border-transparent bg-surface-elevated text-text-secondary',
-        outline: 'border-border-light text-text-secondary',
-        destructive: 'border-transparent bg-danger/20 text-danger',
-        success: 'border-transparent bg-success/20 text-success',
-        warning: 'border-transparent bg-warning/20 text-warning',
+        // Default: soft green (not neon) — used for status, frequency tags
+        default: 'border-transparent bg-green-soft text-green-deep',
+        // Secondary: neutral light grey
+        secondary: 'border-transparent bg-[#F0F2EF] text-text-mid',
+        // Outline: subtle border
+        outline: 'border-border-subtle text-text-mid bg-transparent',
+        // Destructive / error
+        destructive: 'border-transparent bg-danger/10 text-danger',
+        // Success
+        success: 'border-transparent bg-success/10 text-success',
+        // Warning
+        warning: 'border-transparent bg-warning/10 text-warning',
+        // Admin / elevated role
+        admin: 'border-transparent bg-green-soft text-green-deep border border-green-deep/20',
       },
     },
     defaultVariants: {

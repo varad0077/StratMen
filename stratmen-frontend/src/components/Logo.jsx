@@ -5,9 +5,9 @@ import { cn } from '@/lib/utils';
 
 export const Logo = ({ className, size = 'default', showSubtitle = true, to = '/' }) => {
   const iconSizes = {
-    sm: 'h-6 w-6',
-    default: 'h-8 w-8',
-    lg: 'h-10 w-10',
+    sm: 'h-5 w-5',
+    default: 'h-7 w-7',
+    lg: 'h-9 w-9',
   };
 
   const textSizes = {
@@ -18,13 +18,16 @@ export const Logo = ({ className, size = 'default', showSubtitle = true, to = '/
 
   const content = (
     <div className={cn('inline-flex items-center gap-2.5 group cursor-pointer', className)}>
-      <div className="relative flex items-center justify-center p-2 rounded-xl bg-surface-elevated border border-border-light group-hover:border-accent/50 transition-all duration-300">
-        <Shield className={cn('text-accent transition-transform duration-300 group-hover:scale-110', iconSizes[size])} />
-        <div className="absolute inset-0 bg-accent/10 rounded-xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      {/* Icon mark */}
+      <div className="relative flex items-center justify-center p-2 rounded-xl bg-green-soft border border-border-subtle group-hover:border-green-deep/30 transition-all duration-300">
+        <Shield className={cn('text-green-deep transition-transform duration-300 group-hover:scale-110', iconSizes[size])} />
       </div>
+
+      {/* Wordmark */}
       <div className="flex flex-col">
-        <span className={cn('font-bold tracking-tight text-text-primary leading-tight', textSizes[size])}>
-          Strat<span className="text-accent">Men</span>
+        <span className={cn('font-bold tracking-tight leading-tight font-manrope', textSizes[size])}>
+          <span className="text-text-dark">Strat</span>
+          <span className="text-green-deep">Men</span>
         </span>
         {showSubtitle && (
           <span className="text-[10px] uppercase tracking-widest text-text-muted font-semibold -mt-0.5">

@@ -37,6 +37,7 @@ export const Profile = () => {
         setMyPosts(posts);
       } catch (error) {
         console.error('Error loading my posts:', error);
+        toast.error('Failed to load your posts.');
       } finally {
         setLoadingPosts(false);
       }
@@ -60,7 +61,8 @@ export const Profile = () => {
       toast.success('Profile updated successfully!');
       setEditing(false);
     } catch (error) {
-      toast.error('Failed to update profile.');
+      console.error('Profile update error:', error);
+      toast.error('Failed to update profile. Please try again.');
     } finally {
       setUpdating(false);
     }
@@ -74,45 +76,45 @@ export const Profile = () => {
 
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
-      {/* Profile Header Card */}
-      <div className="p-6 rounded-xl border border-border bg-surface-dark space-y-6">
+      {/* ── Profile Header Card ── */}
+      <div className="p-6 rounded-xl border border-border-subtle bg-bg-white shadow-card space-y-6">
         <div className="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
           <UserAvatar
             src={profile?.avatar_url || user?.user_metadata?.avatar_url}
             name={displayName}
             size="xl"
-            className="border-2 border-accent/40"
+            className="border-2 border-green-soft"
           />
 
-          <div className="flex-1 space-y-1">
+          <div className="flex-1 space-y-1.5">
             <div className="flex flex-col sm:flex-row sm:items-center gap-2 justify-between">
-              <h2 className="text-2xl font-bold text-text-primary">{displayName}</h2>
+              <h2 className="text-2xl font-bold text-text-dark font-heading">{displayName}</h2>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setEditing(!editing)}
                 className="self-center sm:self-auto"
               >
-                <Edit2 className="h-3.5 w-3.5 mr-1" />
+                <Edit2 className="h-3.5 w-3.5" />
                 {editing ? 'Cancel' : 'Edit Profile'}
               </Button>
             </div>
 
-            <p className="text-xs font-semibold text-accent">{roleTitle}</p>
+            <p className="text-xs font-semibold text-green-deep">{roleTitle}</p>
 
-            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 text-xs text-text-muted pt-2">
-              <div className="flex items-center gap-1">
-                <Mail className="h-3.5 w-3.5 text-text-secondary" />
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 text-xs text-text-muted pt-1">
+              <div className="flex items-center gap-1.5">
+                <Mail className="h-3.5 w-3.5 text-text-mid" />
                 <span>{user?.email}</span>
               </div>
               {profile?.phone && (
-                <div className="flex items-center gap-1">
-                  <Phone className="h-3.5 w-3.5 text-text-secondary" />
+                <div className="flex items-center gap-1.5">
+                  <Phone className="h-3.5 w-3.5 text-text-mid" />
                   <span>{profile.phone}</span>
                 </div>
               )}
-              <div className="flex items-center gap-1">
-                <Calendar className="h-3.5 w-3.5 text-text-secondary" />
+              <div className="flex items-center gap-1.5">
+                <Calendar className="h-3.5 w-3.5 text-text-mid" />
                 <span>Joined {formatDate(profile?.created_at || user?.created_at)}</span>
               </div>
             </div>
@@ -121,55 +123,57 @@ export const Profile = () => {
 
         {/* Edit Profile Form */}
         {editing && (
-          <form onSubmit={handleUpdateProfile} className="pt-4 border-t border-border-light space-y-4 animate-fade-in">
+          <form onSubmit={handleUpdateProfile} className="pt-4 border-t border-border-subtle space-y-4 animate-fade-in">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <label className="text-xs font-medium text-text-secondary">Full Name</label>
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-text-dark">Full Name</label>
                 <Input value={fullName} onChange={(e) => setFullName(e.target.value)} />
               </div>
-              <div className="space-y-1">
-                <label className="text-xs font-medium text-text-secondary">Phone Number</label>
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-text-dark">Phone Number</label>
                 <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="9876543210" />
               </div>
             </div>
-            <Button type="submit" size="sm" disabled={updating} className="font-semibold shadow-glow">
-              <Check className="h-4 w-4 mr-1" />
+            <Button type="submit" size="sm" disabled={updating} className="font-semibold">
+              <Check className="h-4 w-4" />
               {updating ? 'Saving...' : 'Save Changes'}
             </Button>
           </form>
         )}
 
         {/* User Stats Grid */}
-        <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border-light text-center">
-          <div className="p-3 rounded-lg bg-surface-elevated">
-            <div className="flex items-center justify-center gap-1 text-accent mb-1">
-              <Layers className="h-4 w-4" />
-              <span className="text-lg font-bold">{myPosts.length}</span>
+        <div className="grid grid-cols-3 gap-3 pt-4 border-t border-border-subtle text-center">
+          <div className="p-3 rounded-lg bg-bg-warm">
+            <div className="flex items-center justify-center gap-1.5 mb-1">
+              <Layers className="h-4 w-4 text-green-deep" />
+              <span className="text-lg font-bold text-text-dark">{myPosts.length}</span>
             </div>
             <p className="text-[11px] text-text-muted">Total Posts</p>
           </div>
 
-          <div className="p-3 rounded-lg bg-surface-elevated">
-            <div className="flex items-center justify-center gap-1 text-danger mb-1">
-              <Heart className="h-4 w-4 fill-danger" />
-              <span className="text-lg font-bold">{totalLikes}</span>
+          <div className="p-3 rounded-lg bg-bg-warm">
+            <div className="flex items-center justify-center gap-1.5 mb-1">
+              <Heart className="h-4 w-4 fill-danger text-danger" />
+              <span className="text-lg font-bold text-text-dark">{totalLikes}</span>
             </div>
             <p className="text-[11px] text-text-muted">Likes Received</p>
           </div>
 
-          <div className="p-3 rounded-lg bg-surface-elevated">
-            <div className="flex items-center justify-center gap-1 text-accent mb-1">
-              <Bookmark className="h-4 w-4" />
-              <span className="text-lg font-bold">Member</span>
+          <div className="p-3 rounded-lg bg-bg-warm">
+            <div className="flex items-center justify-center gap-1.5 mb-1">
+              <Bookmark className="h-4 w-4 text-green-deep" />
+              <span className="text-lg font-bold text-text-dark">
+                <Badge variant="default" className="text-[10px]">Active</Badge>
+              </span>
             </div>
             <p className="text-[11px] text-text-muted">Status</p>
           </div>
         </div>
       </div>
 
-      {/* User Posts Timeline */}
+      {/* ── User Posts Timeline ── */}
       <div className="space-y-4">
-        <h3 className="text-lg font-bold text-text-primary">My Post Activity</h3>
+        <h3 className="text-lg font-bold text-text-dark font-heading">My Post Activity</h3>
 
         {loadingPosts ? (
           <div className="py-8 flex justify-center">
@@ -186,7 +190,7 @@ export const Profile = () => {
             />
           ))
         ) : (
-          <div className="p-8 text-center bg-surface-dark rounded-xl border border-border">
+          <div className="p-8 text-center bg-bg-white rounded-xl border border-border-subtle">
             <p className="text-sm text-text-muted">You haven't created any posts yet.</p>
           </div>
         )}

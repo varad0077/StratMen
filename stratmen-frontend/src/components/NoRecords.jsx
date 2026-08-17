@@ -10,12 +10,12 @@ export const NoRecords = ({
   className = '',
 }) => {
   return (
-    <div className={cn('flex flex-col items-center justify-center p-8 text-center rounded-xl border border-border bg-surface-dark/50 my-4', className)}>
-      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-surface-elevated text-text-muted mb-4">
-        <Icon className="h-8 w-8" />
+    <div className={cn('flex flex-col items-center justify-center p-10 text-center rounded-xl border border-border-subtle bg-bg-white my-4', className)}>
+      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-green-soft text-green-deep mb-4">
+        <Icon className="h-7 w-7" />
       </div>
-      <h4 className="text-lg font-semibold text-text-primary">{title}</h4>
-      <p className="mt-1 text-sm text-text-secondary max-w-sm">{description}</p>
+      <h4 className="text-base font-semibold text-text-dark">{title}</h4>
+      <p className="mt-1.5 text-sm text-text-mid max-w-sm leading-relaxed">{description}</p>
       {action && <div className="mt-6">{action}</div>}
     </div>
   );

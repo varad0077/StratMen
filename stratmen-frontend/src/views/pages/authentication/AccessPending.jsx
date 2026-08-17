@@ -2,61 +2,66 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Clock, Mail, ArrowLeft, LogOut } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/Logo';
 import { logout } from '@/services/authService';
+import { toast } from 'sonner';
 
 export const AccessPending = () => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
 
   const handleLogout = async () => {
-    await logout();
-    navigate('/stratchat');
+    try {
+      await logout();
+      navigate('/stratchat');
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast.error('Failed to log out. Please try again.');
+    }
   };
 
   return (
-    <div className="min-h-screen bg-bg-dark flex items-center justify-center p-4 gradient-hero">
-      <Card className="glass max-w-md w-full text-center p-6 space-y-6 border-warning/30">
+    <div className="min-h-screen bg-bg-warm flex items-center justify-center p-4">
+      <div className="max-w-md w-full bg-bg-white rounded-xl border border-border-subtle shadow-modal p-8 text-center space-y-6">
         <div className="flex justify-center">
-          <Logo />
+          <Logo size="lg" className="justify-center" />
         </div>
 
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-warning/15 text-warning mx-auto border border-warning/30 animate-pulse">
-          <Clock className="h-8 w-8" />
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-warning/15 text-warning mx-auto border border-warning/30">
+          <Clock className="h-7 w-7" />
         </div>
 
-        <CardHeader className="p-0 space-y-2">
-          <CardTitle className="text-2xl font-bold text-text-primary">
+        <div className="space-y-2">
+          <h1 className="text-2xl font-extrabold text-text-dark font-heading">
             Access Pending Approval
-          </CardTitle>
-          <CardDescription className="text-sm text-text-secondary">
-            Your account ({user?.email || 'authenticated'}) is not yet listed on the StratChat allowlist.
-          </CardDescription>
-        </CardHeader>
+          </h1>
+          <p className="text-sm text-text-mid leading-relaxed">
+            Your account (<span className="font-medium text-text-dark">{user?.email || 'authenticated'}</span>) is not yet listed on the StratChat allowlist.
+          </p>
+        </div>
 
-        <CardContent className="p-0 text-sm text-text-muted space-y-3 bg-surface-elevated/50 p-4 rounded-lg border border-border">
+        <div className="bg-bg-warm p-4 rounded-lg border border-border-subtle text-sm text-text-mid space-y-2 text-left">
           <p>
             If you have submitted a Join Application, our admin team is reviewing your details. You will receive access once approved.
           </p>
-          <div className="flex items-center justify-center gap-2 text-xs text-text-secondary pt-2">
-            <Mail className="h-4 w-4 text-accent" />
+          <div className="flex items-center gap-2 text-xs text-text-muted pt-1">
+            <Mail className="h-3.5 w-3.5 text-green-deep" />
             <span>Contact Support: contact@stratmen.org</span>
           </div>
-        </CardContent>
+        </div>
 
-        <CardFooter className="p-0 flex flex-col sm:flex-row gap-3">
-          <Button variant="outline" onClick={() => navigate('/')} className="w-full">
-            <ArrowLeft className="h-4 w-4 mr-2" />
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Button onClick={() => navigate('/')} className="w-full">
+            <ArrowLeft className="h-4 w-4" />
             Return Home
           </Button>
-          <Button variant="ghost" onClick={handleLogout} className="w-full text-text-muted hover:text-text-primary">
-            <LogOut className="h-4 w-4 mr-2" />
+          <Button variant="outline" onClick={handleLogout} className="w-full">
+            <LogOut className="h-4 w-4" />
             Log Out
           </Button>
-        </CardFooter>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 };

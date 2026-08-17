@@ -25,30 +25,31 @@ export const ConfirmationDialog = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+          className="fixed inset-0 bg-text-dark/40 backdrop-blur-sm"
         />
 
-        {/* Modal */}
+        {/* Modal Panel */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 10 }}
+          initial={{ opacity: 0, scale: 0.96, y: 8 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 10 }}
-          className="relative z-10 w-full max-w-md overflow-hidden rounded-xl border border-border bg-surface-dark p-6 shadow-xl"
+          exit={{ opacity: 0, scale: 0.96, y: 8 }}
+          transition={{ duration: 0.2 }}
+          className="relative z-10 w-full max-w-md overflow-hidden rounded-xl border border-border-subtle bg-bg-white p-6 shadow-modal"
         >
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 text-text-muted hover:text-text-primary transition-colors cursor-pointer"
+            className="absolute top-4 right-4 text-text-muted hover:text-text-dark transition-colors cursor-pointer"
           >
             <X className="h-5 w-5" />
           </button>
 
           <div className="flex items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-danger/10 text-danger">
-              <AlertTriangle className="h-6 w-6" />
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-danger/10 text-danger">
+              <AlertTriangle className="h-5 w-5" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-text-primary">{title}</h3>
-              <p className="mt-2 text-sm text-text-secondary">{description}</p>
+              <h3 className="text-base font-bold text-text-dark font-heading">{title}</h3>
+              <p className="mt-2 text-sm text-text-mid leading-relaxed">{description}</p>
             </div>
           </div>
 

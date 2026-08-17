@@ -3,6 +3,112 @@
 ================================================================================
 
 ────────────────────────────────────────────────────────────────────────────────
+Date/Time   : 2026-08-17 14:10 IST
+Feature     : Full Visual Theme Redesign — Strategic Editorial Theme
+────────────────────────────────────────────────────────────────────────────────
+
+Summary:
+  Complete overhaul of the StratMen Foundation frontend visual identity.
+  Replaced the dark/neon "gaming UI" theme with a "Strategic Editorial" theme:
+  warm neutrals, deep professional green accents, and mint highlights reserved
+  only for selective heading emphasis. No hero images required.
+
+Design Principles Applied:
+  - Background: #F7F7F2 (warm off-white) for pages, #FFFFFF (white) for cards/nav
+  - Primary heading: #202420 (deep charcoal)
+  - Signature accent: #63D9A3 (mint) — used ONLY for key heading words
+  - Primary action color: #315B45 (deep professional green) — buttons, CTAs, icons
+  - Soft green: #E4F1E8 — active nav states, icon containers, tag backgrounds
+  - Borders: #E1E5DF (subtle), #C8D0C8 (mid-strength)
+  - Typography: Manrope (headings, 600-800 weight), Inter (body/UI)
+  - No neon lime (#A8E63D), no dark glassmorphism, no ambient glows
+
+Created / Modified Files:
+  DESIGN FOUNDATION:
+  - stratmen-frontend/index.html (Updated — Added Manrope Google Font)
+  - stratmen-frontend/tailwind.config.js (Overwritten — Full color token replacement)
+  - stratmen-frontend/src/index.css (Overwritten — CSS variables, body, utilities)
+
+  UI PRIMITIVES:
+  - stratmen-frontend/src/components/ui/button.jsx (Updated — Light variants, no glow)
+  - stratmen-frontend/src/components/ui/card.jsx (Updated — White bg, border-subtle)
+  - stratmen-frontend/src/components/ui/badge.jsx (Updated — Soft green default, no neon)
+  - stratmen-frontend/src/components/ui/input.jsx (Updated — Light inputs, deep green focus)
+  - stratmen-frontend/src/components/ui/textarea.jsx (Updated — Light textarea)
+  - stratmen-frontend/src/components/ui/avatar.jsx (Updated — Soft green fallback)
+  - stratmen-frontend/src/components/ui/tabs.jsx (Updated — Light theme tabs)
+  - stratmen-frontend/src/components/ui/label.jsx (Updated — Token update)
+
+  CORE COMPONENTS:
+  - stratmen-frontend/src/components/Logo.jsx (Updated — Deep green brand)
+  - stratmen-frontend/src/components/Loader.jsx (Updated — Light spinner)
+  - stratmen-frontend/src/components/SplashScreen.jsx (Updated — Warm splash)
+  - stratmen-frontend/src/components/ConfirmationDialog.jsx (Updated — White modal)
+  - stratmen-frontend/src/components/ImageLightbox.jsx (Updated — Clean controls)
+  - stratmen-frontend/src/components/NoRecords.jsx (Updated — White card empty state)
+
+  PUBLIC LAYOUT:
+  - stratmen-frontend/src/layout/PublicLayout/index.jsx (Updated — Warm bg)
+  - stratmen-frontend/src/layout/PublicLayout/Navbar.jsx (Overwritten — White, editorial)
+  - stratmen-frontend/src/layout/PublicLayout/Footer.jsx (Overwritten — White footer)
+
+  LANDING PAGES:
+  - stratmen-frontend/src/views/landing/components/HeroSection.jsx (Overwritten — Editorial hero)
+  - stratmen-frontend/src/views/landing/components/MissionVision.jsx (Overwritten — White cards)
+  - stratmen-frontend/src/views/landing/components/FootprintStats.jsx (Overwritten — Clean stats)
+  - stratmen-frontend/src/views/landing/Home.jsx (Overwritten — Light activity + CTA sections)
+
+  PUBLIC PAGES:
+  - stratmen-frontend/src/views/pages/Activities/Activities.jsx (Overwritten — Light page)
+  - stratmen-frontend/src/views/pages/Journey/Journey.jsx (Overwritten — Clean timeline)
+  - stratmen-frontend/src/views/pages/AboutUs/AboutUs.jsx (Overwritten — Light team cards)
+
+  STRATCHAT INTERFACE:
+  - stratmen-frontend/src/layout/StratChatLayout/index.jsx (Updated — Warm bg)
+  - stratmen-frontend/src/layout/StratChatLayout/Header.jsx (Overwritten — White header)
+  - stratmen-frontend/src/layout/StratChatLayout/LeftSidebar.jsx (Overwritten — White sidebar)
+  - stratmen-frontend/src/layout/StratChatLayout/RightSidebar.jsx (Overwritten — White sidebar)
+  - stratmen-frontend/src/views/pages/stratchat/StratChatLanding.jsx (Overwritten — White forms)
+  - stratmen-frontend/src/views/pages/stratchat/Profile.jsx (Overwritten — White card)
+  - stratmen-frontend/src/views/pages/authentication/AccessPending.jsx (Updated — Light theme)
+
+  FEED & CHAT:
+  - stratmen-frontend/src/components/feed/PostCard.jsx (Overwritten — White cards)
+  - stratmen-frontend/src/components/feed/PostCreator.jsx (Overwritten — White bg)
+  - stratmen-frontend/src/components/feed/CommentSection.jsx (Overwritten — Light comments)
+  - stratmen-frontend/src/components/feed/FilterBar.jsx (Overwritten — Light filter)
+  - stratmen-frontend/src/components/chat/ChatMessage.jsx (Overwritten — Deep green own msgs)
+  - stratmen-frontend/src/views/pages/stratchat/GroupChat.jsx (Overwritten — White chat)
+
+  ADMIN PORTAL:
+  - stratmen-frontend/src/views/pages/stratchat/AdminPortal.jsx (Overwritten — Light admin)
+
+  CHANGELOG:
+  - PROJECT_CHANGE_LOG.txt (Updated)
+
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+Date/Time   : 2026-08-14 17:12 IST
+Feature     : Synchronous Session Caching & Landing Page Auto-Redirect Fix
+────────────────────────────────────────────────────────────────────────────────
+
+Summary:
+  Fixed page refresh on `/stratchat/feed` redirecting users to `/stratchat`:
+  - Updated `authSlice.js` to inspect and load Supabase `auth-token` from `localStorage` synchronously
+    on initial Redux state (`isAuthenticated: true`).
+  - Added an auto-redirect `useEffect` to `StratChatLanding.jsx` so if a verified member navigates to
+    `/stratchat`, they are automatically taken directly to `/stratchat/feed`.
+
+Created / Modified Files:
+  - `stratmen-frontend/src/store/authSlice.js` (Updated)
+  - `stratmen-frontend/src/views/pages/stratchat/StratChatLanding.jsx` (Updated)
+  - `PROJECT_CHANGE_LOG.txt` (Updated)
+
+================================================================================
+
+
+────────────────────────────────────────────────────────────────────────────────
 Date/Time   : 2026-08-14 17:08 IST
 Feature     : Session & Allowlist LocalStorage Persistence across Page Refreshes
 ────────────────────────────────────────────────────────────────────────────────

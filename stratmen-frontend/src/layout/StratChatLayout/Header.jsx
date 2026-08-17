@@ -21,39 +21,42 @@ export const Header = () => {
       toast.success('Logged out successfully');
       navigate('/');
     } catch (error) {
-      toast.error('Failed to log out');
+      console.error('Logout error:', error);
+      toast.error('Failed to log out. Please try again.');
     }
   };
 
   const displayName = profile?.full_name || user?.user_metadata?.full_name || user?.email || 'Member';
 
   return (
-    <header className="sticky top-0 z-30 h-16 border-b border-border bg-surface-dark/95 backdrop-blur px-4 sm:px-6 flex items-center justify-between">
+    <header className="sticky top-0 z-30 h-16 border-b border-border-subtle bg-bg-white px-4 sm:px-6 flex items-center justify-between">
       <div className="flex items-center gap-3">
         <button
           onClick={() => dispatch(toggleMobileSidebar())}
-          className="lg:hidden text-text-secondary hover:text-text-primary p-1 cursor-pointer"
+          className="lg:hidden text-text-mid hover:text-text-dark p-1 cursor-pointer transition-colors"
         >
           <Menu className="h-6 w-6" />
         </button>
         <Logo to="/stratchat/feed" />
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
+        {/* Admin badge */}
         {isAdmin && (
-          <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-accent/15 border border-accent/30 text-accent text-xs font-semibold">
+          <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-green-soft text-green-deep text-xs font-semibold">
             <ShieldCheck className="h-3.5 w-3.5" />
             <span>Admin</span>
           </div>
         )}
 
-        <div className="flex items-center gap-3">
+        {/* User info + logout */}
+        <div className="flex items-center gap-2.5">
           <UserAvatar
             src={profile?.avatar_url || user?.user_metadata?.avatar_url}
             name={displayName}
             size="sm"
           />
-          <span className="hidden md:inline text-sm font-medium text-text-primary max-w-[150px] truncate">
+          <span className="hidden md:inline text-sm font-medium text-text-dark max-w-[150px] truncate">
             {displayName}
           </span>
 

@@ -19,22 +19,25 @@ export const SplashScreen = ({ duration = 2000 }) => {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-bg-dark"
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-bg-warm"
         >
           <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
+            initial={{ scale: 0.88, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="flex flex-col items-center gap-4 text-center"
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+            className="flex flex-col items-center gap-5 text-center"
           >
-            <div className="relative p-5 rounded-2xl bg-surface-elevated border border-accent/20 shadow-glow">
-              <Shield className="h-16 w-16 text-accent animate-pulse" />
+            {/* Logo mark */}
+            <div className="p-5 rounded-2xl bg-green-soft border border-border-subtle shadow-card">
+              <Shield className="h-14 w-14 text-green-deep" />
             </div>
+
+            {/* Wordmark */}
             <div>
-              <h1 className="text-3xl font-extrabold tracking-tight text-text-primary">
-                Strat<span className="text-accent">Men</span>
+              <h1 className="text-3xl font-extrabold tracking-tight font-manrope text-text-dark">
+                Strat<span className="text-green-deep">Men</span>
               </h1>
-              <p className="text-xs uppercase tracking-widest text-text-muted mt-1 font-semibold">
+              <p className="text-xs uppercase tracking-widest text-text-muted mt-1.5 font-semibold">
                 Foundation
               </p>
             </div>
