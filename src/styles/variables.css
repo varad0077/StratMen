@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap');
+
+/* StratChat InstaLinkedIn Design System Tokens */
+:root {
+  /* Signature Brand Color Tokens */
+  --brand-lime: #84cc16;         /* StratMen Lime */
+  --brand-lime-hover: #a3e635;
+  --brand-lime-light: rgba(132, 204, 22, 0.14);
+  --brand-lime-border: rgba(132, 204, 22, 0.4);
+  --brand-lime-glow: rgba(132, 204, 22, 0.3);
+  
+  --brand-cyan: #06b6d4;
+  --brand-gold: #eab308;
+
+  /* Default Dark Glass Mode (Deep Obsidian Vibe) */
+  --bg-main: #090c15;
+  --bg-header: rgba(13, 17, 28, 0.82);
+  --bg-card: rgba(17, 24, 39, 0.85);
+  --bg-card-hover: rgba(26, 36, 56, 0.9);
+  --bg-input: rgba(11, 16, 26, 0.9);
+  --bg-sidebar: rgba(17, 24, 39, 0.85);
+
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(255, 255, 255, 0.16);
+  --border-focus: var(--brand-lime);
+
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.45);
+  --shadow-glow: 0 0 30px rgba(132, 204, 22, 0.25);
+
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Outfit', sans-serif;
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+  
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Light Theme Mode */
+[data-theme="light"] {
+  --bg-main: #f0f4f8;
+  --bg-header: rgba(255, 255, 255, 0.88);
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8fafc;
+  --bg-input: #f1f5f9;
+  --bg-sidebar: #ffffff;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-medium: rgba(0, 0, 0, 0.16);
+
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --shadow-glow: 0 4px 20px rgba(132, 204, 22, 0.2);
+}
+
+[data-accent="lime"] {
+  --brand-lime: #84cc16;
+  --brand-lime-hover: #a3e635;
+  --brand-lime-light: rgba(132, 204, 22, 0.14);
+  --brand-lime-border: rgba(132, 204, 22, 0.4);
+  --brand-lime-glow: rgba(132, 204, 22, 0.3);
+}
