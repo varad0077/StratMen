@@ -1,4 +1,4 @@
-import { collection, doc, setDoc, deleteDoc, onSnapshot, getDocs } from 'firebase/firestore';
+import { collection, doc, setDoc, deleteDoc, onSnapshot } from 'firebase/firestore';
 import { db } from './firebase';
 import { AllowedUser } from '../data/allowlist';
 
