@@ -3,6 +3,23 @@
 ================================================================================
 
 ────────────────────────────────────────────────────────────────────────────────
+Date/Time   : 2026-08-25 10:47 IST
+Feature     : Revert Deployment Folder Adjustments & Restore Original StratMen App
+────────────────────────────────────────────────────────────────────────────────
+
+Summary:
+  - Reverted deployment folder adjustments back to stable commit `5a6ce58`.
+  - Restored complete original StratMen Foundation full-stack application structure
+    (Public Site, StratChat Feed, Admin Portal, Supabase integration, Tailwind styling).
+  - Re-installed dependencies in `stratmen-frontend/`.
+
+Created / Modified Files:
+  - `stratmen-frontend/` (Restored full-stack React 19 codebase)
+  - `PROJECT_CHANGE_LOG.txt` (Updated)
+
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
 Date/Time   : 2026-08-17 19:10 IST
 Feature     : Production Hosting Configurations (Vercel & Netlify SPA Routing)
 ────────────────────────────────────────────────────────────────────────────────
